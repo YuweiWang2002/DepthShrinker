@@ -32,8 +32,10 @@ _C.DATA.BATCH_SIZE = 128
 _C.DATA.DATA_PATH = ''
 # Dataset name
 _C.DATA.DATASET = 'imagenet'
+# _C.DATA.DATASET = 'cifar10'
 # Input image size
 _C.DATA.IMG_SIZE = 224
+# _C.DATA.IMG_SIZE = 32
 # Interpolation to resize image (random, bilinear, bicubic)
 _C.DATA.INTERPOLATION = 'bicubic'
 # Use zipped dataset instead of folder dataset
@@ -60,6 +62,7 @@ _C.MODEL.NAME = 'resnet50_ds'
 _C.MODEL.RESUME = ''
 # Number of classes, overwritten in data preparation
 _C.MODEL.NUM_CLASSES = 1000
+# _C.MODEL.NUM_CLASSES = 10
 # Dropout rate
 _C.MODEL.DROP_RATE = 0.0
 # Drop path rate
