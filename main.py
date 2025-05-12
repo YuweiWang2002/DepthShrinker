@@ -76,7 +76,7 @@ def parse_option():
     parser.add_argument('--data_path',
         type=str,
         default="/data1/dataset/ILSVRC/Data/CLS-LOC/",
-        help='path to imagenet',
+        help='path to dataset',
     )
     parser.add_argument(
         "--opts",
@@ -281,7 +281,9 @@ def main_worker(gpu, ngpus_per_node, config, dp=False):
     config.freeze()
 
     # if args.keep_all_act is True, all act fun will be kept; otherwise if args.decay_slope is False, then all changable slopes will be set to the end slope
-    if config.EVAL_MODE or (not config.DS.SEARCH and not config.DS.DECAY_SLOPE and not config.DS.KEEP_ALL_ACT):
+    # if config.EVAL_MODE or (not config.DS.SEARCH and not config.DS.DECAY_SLOPE and not config.DS.KEEP_ALL_ACT):
+    if config.EVAL_MODE and (not config.DS.SEARCH and not config.DS.DECAY_SLOPE and not config.DS.KEEP_ALL_ACT):
+
         slope = []
         for act_ind in config.act_ind_list:
             if act_ind:
@@ -348,7 +350,7 @@ def main_worker(gpu, ngpus_per_node, config, dp=False):
         logger.info("Successfully load pretrained model: %s", checkpoint_name)
 
     model.cuda()
-    logger.info(str(model))
+    # logger.info(str(model))
 
 
     if config.EVAL_MODE:
@@ -377,8 +379,11 @@ def main_worker(gpu, ngpus_per_node, config, dp=False):
                 module.slope = None
         
         inputs = (torch.randn((1,3,config.DATA.IMG_SIZE,config.DATA.IMG_SIZE)).cuda(),)
+        # inputs = (torch.randn((2,3,config.DATA.IMG_SIZE,config.DATA.IMG_SIZE)).cuda(),)
+
         flops = FlopCountAnalysis(model, inputs)
         logger.info(f"number of GFLOPs: {flops.total() / 1e9}")
+        # logger.info(f"number of MFLOPs: {flops.total() / 1e6}")
 
         throughput(data_loader_val, model, logger)
         return
