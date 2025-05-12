@@ -99,8 +99,12 @@ def build_dataset(is_train, config):
             root = os.path.join(config.DATA.DATA_PATH, prefix)
             dataset = datasets.ImageFolder(root, transform=transform)
         nb_classes = 1000
+    elif config.DATA.DATASET == 'cifar10':
+        root = config.DATA.DATA_PATH
+        dataset = datasets.CIFAR10(root, train=is_train, transform=transform, download=False)
+        nb_classes = 10
     else:
-        raise NotImplementedError("We only support ImageNet Now.")
+        raise NotImplementedError("We only support ImageNet and CIFAR10 Now.")
 
     return dataset, nb_classes
 
@@ -141,5 +145,8 @@ def build_transform(is_train, config):
             )
 
     t.append(transforms.ToTensor())
-    t.append(transforms.Normalize(IMAGENET_DEFAULT_MEAN, IMAGENET_DEFAULT_STD))
+    if config.DATA.DATASET == 'imagenet':
+        t.append(transforms.Normalize(IMAGENET_DEFAULT_MEAN, IMAGENET_DEFAULT_STD))
+    elif config.DATA.DATASET == 'cifar10':
+        t.append(transforms.Normalize([0.4914, 0.4822, 0.4465], [0.2023, 0.1994, 0.2010]))
     return transforms.Compose(t)
